@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import {useUserStore} from "@/stores/user";
 
-import {useCounterStore} from "@/stores/counter";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,9 +26,10 @@ const router = createRouter({
 
 router.beforeEach((to,from,next)=>{
   //获取缓存的用户数据
-  // const store = useCounterStore()
-  // const count =  store.count;
-  if(!to.matched.length){   //没有匹配路由
+  const store = useUserStore()
+  const user = store.getUser();
+  const hasUser = user && user.id
+  if(!hasUser && to.path !== "/login"){   //没有匹配路由
     next("/login")
   }else{
     next()
